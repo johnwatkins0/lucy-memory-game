@@ -1,6 +1,7 @@
 import React from 'react';
 import randomHexColor from 'random-hex-color';
 import Tone from 'tone';
+import StartAudioContext from 'startaudiocontext';
 
 const synth = new Tone.Synth().toMaster();
 
@@ -22,7 +23,8 @@ class Board extends React.Component {
             sequence: [],
             userInteracted: false,
             checkIndex: 0,
-            failed: false
+            failed: false,
+            started: false
         };
     }
     constructor(props) {
@@ -35,14 +37,18 @@ class Board extends React.Component {
         this.play = this.play.bind(this);
         this.restart = this.restart.bind(this);
         this.updateSequence = this.updateSequence.bind(this);
-    }
-
-    componentDidMount() {
-        this.updateSequence();
+        this.start = this.start.bind(this);
     }
 
     restart() {
-        this.setState(Board.getInitialState(), this.updateSequence);
+        this.setState(
+            { ...Board.getInitialState(), started: true },
+            this.updateSequence
+        );
+    }
+
+    start() {
+        this.setState({ started: true }, this.updateSequence);
     }
 
     updateSequence() {
@@ -62,7 +68,10 @@ class Board extends React.Component {
     play() {
         let i = 0;
         const player = () => {
-            synth.triggerAttackRelease(this.state.sequence[i].note, '8n');
+            StartAudioContext(Tone.context, this.state.sequence[i].el, () => {
+                synth.triggerAttackRelease(this.state.sequence[i].note, '8n');
+            });
+
             this.state.sequence[i].el.classList.add('playing');
 
             setTimeout(() => {
@@ -82,7 +91,9 @@ class Board extends React.Component {
             userInteracted: true
         });
 
-        synth.triggerAttackRelease(cell.note, '8n');
+        StartAudioContext(Tone.context, cell.el).then(() => {
+            synth.triggerAttackRelease(cell.note, '8n');
+        });
 
         if (cell.el.id === this.state.sequence[this.state.checkIndex].el.id) {
             this.setState({
@@ -127,10 +138,24 @@ class Board extends React.Component {
                         Play
                     </button>
                 </div>
-                {this.state.failed && (
+                {(!this.state.started || this.state.failed) && (
                     <div className="failure-overlay">
-                        <h1>Game Over</h1>
-                        <button onClick={this.restart}>Try again?</button>
+                        <h1>
+                            {this.state.started
+                                ? 'Game Over'
+                                : 'Lucy Memory Game'}
+                        </h1>
+                        <button
+                            onClick={() => {
+                                if (this.state.started) {
+                                    this.restart();
+                                } else {
+                                    this.start();
+                                }
+                            }}
+                        >
+                            {this.state.started ? 'Try again?' : 'Start'}
+                        </button>
                     </div>
                 )}
             </div>
