@@ -1,0 +1,93 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    padding: 1vw;
+}
+
+button {
+    border: none;
+}
+
+.wrapper {
+    display: relative;
+}
+
+.grid {
+    margin: 0 auto;
+    display: grid;
+    width: 96vw;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 30vh);
+    grid-gap: 10px;
+
+}
+
+.grid .cell {
+    position: relative;
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+    transition: all .2s;
+    overflow: hidden;
+}
+
+.grid .cell:hover, .grid .cell.playing {
+    z-index: 10;
+    transform: scale3d(1.02, 1.02, 1.02);
+}
+
+.grid .cell:hover:after, .grid .cell.playing:after {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: transparent;
+    transition: background-color .2s;
+    content: '';
+}
+
+.grid .cell:hover:after {
+    background: rgba(75, 68, 68, 0.22);
+}
+
+.grid .cell.playing:after {
+    background: rgba(75, 68, 68, 0.88);
+}
+
+.failure-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, .8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+.controls {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.controls button {
+    padding: 1.5rem;
+    font-size: 100%;
+    border-radius: 100%;
+    border: 1px solid blue;
+}
+
+.controls button[disabled] {
+    opacity: .5;
+}
