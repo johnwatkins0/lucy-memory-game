@@ -21,7 +21,7 @@ class Board extends React.Component {
     static getInitialState() {
         return {
             sequence: [],
-            userInteracted: false,
+            userIsGoing: false,
             checkIndex: 0,
             failed: false,
             started: false
@@ -40,6 +40,10 @@ class Board extends React.Component {
         this.start = this.start.bind(this);
     }
 
+    start() {
+        this.setState({ started: true }, this.updateSequence);
+    }
+
     restart() {
         this.setState(
             { ...Board.getInitialState(), started: true },
@@ -47,19 +51,16 @@ class Board extends React.Component {
         );
     }
 
-    start() {
-        this.setState({ started: true }, this.updateSequence);
-    }
-
     updateSequence() {
-        const sequence = this.state.sequence.map(el => el);
-        sequence.push(cells[Math.floor(Math.random() * cells.length)]);
+        const sequence = this.state.sequence
+            .map(el => el)
+            .concat([cells[Math.floor(Math.random() * cells.length)]]);
 
         this.setState(
             {
                 checkIndex: 0,
                 sequence,
-                userInteracted: false
+                userIsGoing: false
             },
             this.play
         );
@@ -68,15 +69,15 @@ class Board extends React.Component {
     play() {
         let i = 0;
         const player = () => {
-            StartAudioContext(Tone.context, this.state.sequence[i].el, () => {
-                synth.triggerAttackRelease(this.state.sequence[i].note, '8n');
-            });
+            synth.triggerAttackRelease(this.state.sequence[i].note, '8n');
 
             this.state.sequence[i].el.classList.add('playing');
 
             setTimeout(() => {
                 this.state.sequence[i].el.classList.remove('playing');
+            }, 300);
 
+            setTimeout(() => {
                 i += 1;
                 if (i < this.state.sequence.length) {
                     player();
@@ -86,16 +87,17 @@ class Board extends React.Component {
         player();
     }
 
-    handleClick(cell, i) {
-        this.setState({
-            userInteracted: true
-        });
+    handleClick(el) {
+        if (!this.state.userIsGoing) {
+            this.setState({
+                userIsGoing: true
+            });
+        }
 
-        StartAudioContext(Tone.context, cell.el).then(() => {
-            synth.triggerAttackRelease(cell.note, '8n');
-        });
+        const cell = cells.filter(c => c.el.id === el.id)[0];
+        synth.triggerAttackRelease(cell.note, '8n');
 
-        if (cell.el.id === this.state.sequence[this.state.checkIndex].el.id) {
+        if (el.id === this.state.sequence[this.state.checkIndex].el.id) {
             this.setState({
                 checkIndex: this.state.checkIndex + 1
             });
@@ -121,8 +123,13 @@ class Board extends React.Component {
                             }}
                             className="cell"
                             key={cell.note}
-                            onClick={() => {
-                                this.handleClick(cell, i);
+                            onClick={event => {
+                                console.log(event);
+                                StartAudioContext(
+                                    Tone.context,
+                                    event.target,
+                                    () => this.handleClick(cells[i].el)
+                                );
                             }}
                             style={{ background: cell.color }}
                         >
@@ -132,8 +139,14 @@ class Board extends React.Component {
                 </main>
                 <div className="controls">
                     <button
-                        disabled={this.state.userInteracted}
-                        onClick={this.play}
+                        disabled={this.state.userIsGoing}
+                        onClick={event => {
+                            StartAudioContext(
+                                Tone.context,
+                                event.target,
+                                this.play
+                            );
+                        }}
                     >
                         Play
                     </button>

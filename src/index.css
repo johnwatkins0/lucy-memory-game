@@ -40,7 +40,7 @@ button {
     transform: scale3d(1.02, 1.02, 1.02);
 }
 
-.grid .cell:hover:after, .grid .cell.playing:after {
+.grid .cell:hover:after, .grid .cell:active:after, .grid .cell.playing:after {
     pointer-events: none;
     position: absolute;
     top: 0;
@@ -52,12 +52,27 @@ button {
     content: '';
 }
 
-.grid .cell:hover:after {
+.grid .cell:hover:after, .grid .cell:active:after {
     background: rgba(75, 68, 68, 0.22);
 }
 
+@keyframes flash {
+    from {
+        background: rgba(0, 0, 0, 0.88);
+    }
+
+    to {
+      background: yellow;
+    }
+  }
+
 .grid .cell.playing:after {
     background: rgba(75, 68, 68, 0.88);
+    animation-name: flash;
+    animation-duration: 100ms;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in-out;
 }
 
 .failure-overlay {
