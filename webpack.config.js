@@ -1,4 +1,5 @@
 module.exports = {
+    mode: 'development',
     module: {
         rules: [
             {
@@ -22,6 +23,7 @@ module.exports = {
         ]
     },
     devServer: {
+        publicPath: '/dist/',
         index: 'index.html'
     }
 };

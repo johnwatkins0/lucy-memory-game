@@ -38,6 +38,9 @@ class Board extends React.Component {
         this.restart = this.restart.bind(this);
         this.updateSequence = this.updateSequence.bind(this);
         this.start = this.start.bind(this);
+        this.onButtonClick = this.onButtonClick.bind(this);
+        this.onPlayButtonClick = this.onPlayButtonClick;
+        this.startOrRestart = this.startOrRestart.bind(this);
     }
 
     start() {
@@ -111,6 +114,24 @@ class Board extends React.Component {
         }
     }
 
+    startOrRestart() {
+        if (this.state.started) {
+            this.restart();
+        } else {
+            this.start();
+        }
+    }
+
+    onButtonClick(el) {
+        StartAudioContext(Tone.context, event.target, () => {
+            this.handleClick(el);
+        });
+    }
+
+    onPlayButtonClick(event) {
+        StartAudioContext(Tone.context, event.target, this.play);
+    }
+
     render() {
         return (
             <div className="wrapper">
@@ -124,12 +145,10 @@ class Board extends React.Component {
                             className="cell"
                             key={cell.note}
                             onClick={event => {
-                                console.log(event);
-                                StartAudioContext(
-                                    Tone.context,
-                                    event.target,
-                                    () => this.handleClick(cells[i].el)
-                                );
+                                this.onButtonClick(event.target);
+                            }}
+                            onTouchStart={event => {
+                                this.onButtonClick(event.target);
                             }}
                             style={{ background: cell.color }}
                         >
@@ -140,13 +159,8 @@ class Board extends React.Component {
                 <div className="controls">
                     <button
                         disabled={this.state.userIsGoing}
-                        onClick={event => {
-                            StartAudioContext(
-                                Tone.context,
-                                event.target,
-                                this.play
-                            );
-                        }}
+                        onClick={this.onPlayButtonClick}
+                        onTouchStart={this.onPlayButtonClick}
                     >
                         Play
                     </button>
@@ -159,13 +173,8 @@ class Board extends React.Component {
                                 : 'Lucy Memory Game'}
                         </h1>
                         <button
-                            onClick={() => {
-                                if (this.state.started) {
-                                    this.restart();
-                                } else {
-                                    this.start();
-                                }
-                            }}
+                            onClick={this.startOrRestart}
+                            onTouchStart={this.startOrRestart}
                         >
                             {this.state.started ? 'Try again?' : 'Start'}
                         </button>
