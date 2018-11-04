@@ -145,7 +145,7 @@ class Board extends React.Component {
                             }}
                             className="cell"
                             key={cell.note}
-                            onMouseDown={event => {
+                            onClick={event => {
                                 event.preventDefault();
                                 this.onButtonClick(event.target);
                             }}
@@ -158,7 +158,7 @@ class Board extends React.Component {
                 <div className="controls">
                     <button
                         disabled={this.state.userIsGoing}
-                        onMouseDown={this.onPlayButtonClick}
+                        onClick={this.onPlayButtonClick}
                     >
                         Play
                     </button>
@@ -170,7 +170,7 @@ class Board extends React.Component {
                                 ? 'Game Over'
                                 : 'Lucy Memory Game'}
                         </h1>
-                        <button onMouseDown={this.startOrRestart}>
+                        <button onClick={this.startOrRestart}>
                             {this.state.started ? 'Try again?' : 'Start'}
                         </button>
                     </div>
