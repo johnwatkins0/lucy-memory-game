@@ -27,6 +27,16 @@ button {
 
 }
 
+@keyframes flash {
+from {
+    background: rgba(0, 0, 0, 0.88);
+}
+
+to {
+    background: yellow;
+}
+}
+
 .grid .cell {
     position: relative;
     background: white;
@@ -36,9 +46,14 @@ button {
     overflow: hidden;
 }
 
-.grid .cell:hover, .grid .cell.playing {
+.grid .cell.playing {
     z-index: 10;
     transform: scale3d(1.02, 1.02, 1.02);
+    animation-name: flash;
+    animation-duration: 100ms;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in-out;
 }
 
 /*
