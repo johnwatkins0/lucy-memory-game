@@ -41,6 +41,7 @@ button {
     transform: scale3d(1.02, 1.02, 1.02);
 }
 
+/*
 .grid .cell:hover:after, .grid .cell:active:after, .grid .cell.playing:after {
     pointer-events: none;
     position: absolute;
@@ -75,6 +76,7 @@ button {
     animation-fill-mode: both;
     animation-timing-function: ease-in-out;
 }
+*/
 
 .failure-overlay {
     position: absolute;
