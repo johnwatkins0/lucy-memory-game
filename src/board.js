@@ -129,6 +129,7 @@ class Board extends React.Component {
     }
 
     onPlayButtonClick(event) {
+        event.preventDefault();
         StartAudioContext(Tone.context, event.target, this.play);
     }
 
@@ -144,10 +145,12 @@ class Board extends React.Component {
                             }}
                             className="cell"
                             key={cell.note}
-                            onClick={event => {
+                            onTouchStart={event => {
+                                event.preventDefault();
                                 this.onButtonClick(event.target);
                             }}
-                            onTouchStart={event => {
+                            onClick={event => {
+                                event.preventDefault();
                                 this.onButtonClick(event.target);
                             }}
                             style={{ background: cell.color }}
