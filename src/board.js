@@ -3,7 +3,7 @@ import randomHexColor from 'random-hex-color';
 import Tone from 'tone';
 import StartAudioContext from 'startaudiocontext';
 
-const synth = new Tone.Synth().toMaster();
+const synth = new Tone.AMSynth().toMaster();
 
 const cells = [
     { note: 'C4', color: randomHexColor() },
@@ -41,6 +41,14 @@ class Board extends React.Component {
         this.onButtonClick = this.onButtonClick.bind(this);
         this.onPlayButtonClick = this.onPlayButtonClick;
         this.startOrRestart = this.startOrRestart.bind(this);
+    }
+
+    componentDidMount() {
+        StartAudioContext(Tone.context, this.startButton);
+        StartAudioContext(Tone.context, this.playButton);
+        cells.forEach(cell => {
+            StartAudioContext(Tone.context, cell.el);
+        });
     }
 
     start() {
@@ -123,14 +131,11 @@ class Board extends React.Component {
     }
 
     onButtonClick(el) {
-        StartAudioContext(Tone.context, event.target, () => {
-            this.handleClick(el);
-        });
+        this.handleClick(el);
     }
 
     onPlayButtonClick(event) {
-        event.preventDefault();
-        StartAudioContext(Tone.context, event.target, this.play);
+        this.play();
     }
 
     render() {
@@ -157,6 +162,9 @@ class Board extends React.Component {
                 </main>
                 <div className="controls">
                     <button
+                        ref={el => {
+                            this.playButton = el;
+                        }}
                         disabled={this.state.userIsGoing}
                         onClick={this.onPlayButtonClick}
                     >
@@ -170,7 +178,12 @@ class Board extends React.Component {
                                 ? 'Game Over'
                                 : 'Lucy Memory Game'}
                         </h1>
-                        <button onClick={this.startOrRestart}>
+                        <button
+                            ref={el => {
+                                this.startButton = el;
+                            }}
+                            onClick={this.startOrRestart}
+                        >
                             {this.state.started ? 'Try again?' : 'Start'}
                         </button>
                     </div>
