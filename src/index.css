@@ -26,7 +26,7 @@ button {
     display: grid;
     width: 96vw;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 30vh);
+    grid-template-rows: repeat(3, 25vh);
     grid-gap: 10px;
 
 }
@@ -112,19 +112,32 @@ to {
 }
 
 .controls {
-    padding: 1.5rem;
+    padding: .75rem 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+}
+
+.progress-bar {
+    display: flex;
+    list-style: none;
 }
 
 .controls button {
     padding: 1.5rem;
     font-size: 100%;
-    border-radius: 100%;
-    border: 1px solid blue;
+    text-transform: uppercase;
 }
 
 .controls button[disabled] {
     opacity: .5;
+}
+
+.completion-dot {
+    width: 1rem;
+    height: 1rem;
+    dipslay: block;
+    margin-left: .375rem;
+    border-radius: 50%;
+    overflow: hidden;
 }
