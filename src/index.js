@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Board from './board';
 import { random } from 'lodash';
 
-import { getCells } from './state/cells';
+import { getCells } from './cells';
 import {
     useStatus,
     ROBOT_PLAYING,

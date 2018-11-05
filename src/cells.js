@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import randomHexColor from 'random-hex-color';
 
 const NOTES = 'CDEFGAB';
@@ -44,5 +43,3 @@ export function getCells(reset = false) {
 
     return CELLS;
 }
-
-export const useCells = cells => useState(cells);
